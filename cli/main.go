@@ -2,33 +2,54 @@ package main
 
 import (
 	"flag"
-	"log"
+	"fmt"
+	"os"
 
 	"github.com/kamontat/gotmpl/config"
-	"github.com/kamontat/gotmpl/template"
+	"github.com/kamontat/gotmpl/core"
+	"github.com/kamontat/gotmpl/logger"
+	"github.com/kamontat/gotmpl/utils"
 )
 
-var configType string
-var configPath string
-var templatePath string
-var outputPath string
+var data ArrayFlag
+var rawData ArrayFlag
+var cwd string
+var debug bool
+
+func usage() string {
+	return `$ gotmpl [-config=<path>] [-debug] value [values...]
+
+value syntax: [<name>:]<template_path>[=<output_path>]
+template syntax: <file_name>.<file_extension>.gotmpl
+	- /tmp/template.yaml.gotmpl
+	- /tmp/template.yaml.gotmpl=/tmp/output.yaml
+	- ./template.yaml.gotmpl=./output.yaml
+	- template:./template.yaml.gotmpl
+	- template:./template.yaml.gotmpl=./output.yaml
+
+By default if no output specify, it will output to template directory.
+
+`
+}
 
 func main() {
-	flag.StringVar(&configPath, "config", "", "config file path")
-	flag.StringVar(&configType, "config-type", "yaml", "config type")
-	flag.StringVar(&templatePath, "template", "", "template file path")
-	flag.StringVar(&outputPath, "output", "", "output file path")
+	flag.Var(&data, "data", "data files, either yaml or json (you can pass more than 1 times)")
+	flag.Var(&rawData, "raw", "raw data in format <key>=<value> (you can pass more than 1 times)")
+	flag.StringVar(&cwd, "cwd", utils.MustR(os.Getwd()), "current directory for relative path resolve to")
+	flag.BoolVar(&debug, "debug", false, "enable debug information")
+	flag.Usage = func() {
+		fmt.Print(usage())
+		flag.PrintDefaults()
+	}
 
 	flag.Parse()
 
-	log.Printf(`Input: 
-1. config-path:   %s
-2. template-path: %s
-3. output-path:   %s
-`, configPath, templatePath, outputPath)
+	logger.Setup(debug)
+	var conf = config.New(data, rawData, &config.Setting{
+		WorkingDirectory: cwd,
+		DebugMode:        debug,
+	})
 
-	var conf = config.New(configType, configPath)
-	var tmpl = template.New(templatePath)
-
-	tmpl.Parse(outputPath, conf)
+	var c = core.New(flag.Args(), conf)
+	utils.Must(c.Parse())
 }

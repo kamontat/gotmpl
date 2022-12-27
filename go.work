@@ -3,5 +3,7 @@ go 1.19
 use (
 	./cli
 	./config
-	./template
+	./core
+	./utils
+	./logger
 )
