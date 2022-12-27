@@ -29,7 +29,8 @@ func DeepMergeMap(a, b map[interface{}]interface{}) map[interface{}]interface{} 
 
 // str is <key>=<value> format string
 func ToMap(str []string) map[interface{}]interface{} {
-	var result = make(map[interface{}]interface{})
+	var movement = make(map[interface{}]interface{})
+	var result = movement
 	for _, raw := range str {
 		var array = strings.Split(raw, "=")
 		if len(array) != 2 {
@@ -39,8 +40,26 @@ func ToMap(str []string) map[interface{}]interface{} {
 		var key = array[0]
 		var value = array[1]
 
-		// TODO: support nested key using dotnotation
-		result[key] = value
+		// Source: https://github.com/kamontat/fthelper/blob/4970bd51fbd41418187dd47c4e5710bd04e4241d/shared/maps/utils.go#L27-L49
+		var keys = strings.Split(key, ".")
+		var length = len(keys)
+		for i, k := range keys {
+			if i == length-1 {
+				if value == "" {
+					delete(movement, k)
+				} else {
+					movement[k] = value
+				}
+			} else {
+				v, ok := movement[k].(map[interface{}]interface{})
+				if !ok {
+					movement[k] = make(map[interface{}]interface{})
+					movement = movement[k].(map[interface{}]interface{})
+				} else {
+					movement = v
+				}
+			}
+		}
 	}
 
 	return result

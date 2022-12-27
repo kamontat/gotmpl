@@ -11,35 +11,82 @@ import (
 	"github.com/kamontat/gotmpl/utils"
 )
 
+var defaultCwd = utils.MustR(os.Getwd())
+var defaultDebug = false
+
 var data ArrayFlag
 var rawData ArrayFlag
 var cwd string
 var debug bool
 
 func usage() string {
-	return `$ gotmpl [-config=<path>] [-debug] value [values...]
+	return fmt.Sprintf(`# Go Template
+$ gotmpl [options...] value [values...]
 
-value syntax: [<name>:]<template_path>[=<output_path>]
-template syntax: <file_name>.<file_extension>.gotmpl
-	- /tmp/template.yaml.gotmpl
-	- /tmp/template.yaml.gotmpl=/tmp/output.yaml
-	- ./template.yaml.gotmpl=./output.yaml
-	- template:./template.yaml.gotmpl
-	- template:./template.yaml.gotmpl=./output.yaml
+## Options
+  --cwd string [default=%s]
+		base path for resolve relative path
+  --data path [multiple]
+        data files to fill information on template.
+		either on yaml or json format.
+  --raw <key>=<value> [multiple]
+	    raw data to fill information on template.
+		dot-notation are accepted.
+  --debug [default=%t]
+		enable debug information and logging
 
-By default if no output specify, it will output to template directory.
+## Value
+syntax: 
+	[<name>:]<template_path>[=<output_path>]
+name: 
+	any string are accepted.
+	default to template_path if not provided.
+template: 
+	relative or absolute are accepted.
+	relative will resolve by using --cwd option.
+	must have %s as extension; otherwise will throw error.
+output:
+	relative or absolute are accepted.
+	directory or filename are accepted as well.
+	default to template file without template extension,
+	if only directory provided, use template file as output file.
 
-`
+### Example
+  '/tmp/dir/gh.txt.gotmpl'
+	name: /tmp/dir/gh.txt.gotmpl
+	template: /tmp/dir/gh.txt.gotmpl
+	output: /tmp/dir/gh.txt
+  '/tmp/content.md.gotmpl=/tmp/readme.txt'
+	name: /tmp/content.md.gotmpl
+	template: /tmp/content.md.gotmpl
+	output: /tmp/readme.txt
+  './file.json.gotmpl=./untitled.json'
+	name: ./file.json.gotmpl
+	template: /$CWD/file.json.gotmpl
+	output: /$CWD/untitled.json
+  'default:config.yaml.gotmpl'
+	name: default
+	template: /$CWD/config.yaml.gotmpl
+	output: /$CWD/config.yaml
+  'custom:values.yaml.gotmpl=./output/values.yaml'
+	name: custom
+	template: /$CWD/values.yaml.gotmpl
+	output: /$CWD/output/values.yaml
+  'custom:values.yaml.gotmpl=output'
+	name: custom
+	template: /$CWD/values.yaml.gotmpl
+	output: /$CWD/output/values.yaml
+
+`, defaultCwd, defaultDebug, core.TEMPLATE_EXTENSION)
 }
 
 func main() {
-	flag.Var(&data, "data", "data files, either yaml or json (you can pass more than 1 times)")
-	flag.Var(&rawData, "raw", "raw data in format <key>=<value> (you can pass more than 1 times)")
-	flag.StringVar(&cwd, "cwd", utils.MustR(os.Getwd()), "current directory for relative path resolve to")
-	flag.BoolVar(&debug, "debug", false, "enable debug information")
+	flag.Var(&data, "data", "")
+	flag.Var(&rawData, "raw", "")
+	flag.StringVar(&cwd, "cwd", defaultCwd, "")
+	flag.BoolVar(&debug, "debug", defaultDebug, "enable debug information")
 	flag.Usage = func() {
 		fmt.Print(usage())
-		flag.PrintDefaults()
 	}
 
 	flag.Parse()
