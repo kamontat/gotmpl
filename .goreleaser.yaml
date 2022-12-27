@@ -3,9 +3,6 @@
 
 project_name: gotmpl
 
-gomod:
-  proxy: true
-
 builds:
   - id: gotmpl
     binary: gotmpl
