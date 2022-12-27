@@ -6,4 +6,6 @@ use (
 	./core
 	./utils
 	./logger
+	./maps
+	./datatype
 )

@@ -3,18 +3,18 @@ package config
 import (
 	"fmt"
 
-	"github.com/kamontat/gotmpl/utils"
+	"github.com/kamontat/gotmpl/maps"
 )
 
 type data struct {
-	underlay map[string]map[interface{}]interface{}
+	underlay map[string]map[string]interface{}
 }
 
-func (d *data) GetMergedData() map[interface{}]interface{} {
-	var result = make(map[interface{}]interface{})
+func (d *data) GetMergedData() map[string]interface{} {
+	var result = make(map[string]interface{})
 
 	for _, mapper := range d.underlay {
-		result = utils.DeepMergeMap(result, mapper)
+		result = maps.Merge(result, mapper, make(maps.Mapper))
 	}
 
 	return result

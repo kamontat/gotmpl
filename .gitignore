@@ -233,3 +233,4 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/go,goland,visualstudiocode,macos,windows,linux
 
 dist/
+example/

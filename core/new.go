@@ -2,18 +2,15 @@ package core
 
 import (
 	"log"
-	"path/filepath"
-	"strings"
 
 	"github.com/kamontat/gotmpl/config"
-	"github.com/kamontat/gotmpl/utils"
 )
 
 func New(templates []string, conf *config.Config) *Core {
-	var _templates = make(map[string]*Template)
+	var _templates = make(map[string][]*Template)
 	for _, tmpl := range templates {
-		var _template = NewTemplate(tmpl, conf.Setting)
-		_templates[_template.Name] = _template
+		var name, _template = NewTemplate(tmpl, conf.Setting)
+		_templates[name] = _template
 	}
 
 	if len(_templates) < 1 {
@@ -26,37 +23,33 @@ func New(templates []string, conf *config.Config) *Core {
 	}
 }
 
-func NewTemplate(input string, setting *config.Setting) *Template {
-	next, _output, err := getValues(input, TEMPLATE_SEPARATOR, func(in string) string {
-		return strings.Replace(in, TEMPLATE_EXTENSION, "", 1)
-	})
+func NewTemplate(raw string, setting *config.Setting) (string, []*Template) {
+	__next, _output, err := split(raw, TEMPLATE_SEPARATOR)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	name, _template, err := getValues(next, NAME_SEPARATOR, func(in string) string {
-		return utils.ResolvePath(setting.WorkingDirectory, in)
-	})
+	_name, _input, err := split(__next, NAME_SEPARATOR)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	var template = utils.ResolvePath(setting.WorkingDirectory, _template)
-	var output = utils.ResolvePath(setting.WorkingDirectory, _output)
+	// Build name
+	var name = buildTemplateName(_name, _input)
+	// Build input
+	var input = buildTemplateInput(_input, setting.WorkingDirectory)
+	// Use input to build output
+	var output = buildTemplateOutput(input, _output, setting.WorkingDirectory)
 
-	// Use template file name if user specify only output directory
-	if filepath.Ext(output) == "" {
-		output = filepath.Join(output, filepath.Base(strings.Replace(template, TEMPLATE_EXTENSION, "", 1)))
+	var templates = make([]*Template, 0)
+	for i, in := range input {
+		var out = output[i]
+
+		templates = append(templates, &Template{
+			Input:  in,
+			Output: out,
+		})
 	}
 
-	// [Validate] template must be .gotmpl extension
-	if filepath.Ext(template) != TEMPLATE_EXTENSION {
-		log.Panic("template file extension must be '.gotmpl'")
-	}
-
-	return &Template{
-		Name:   name,
-		Input:  template,
-		Output: output,
-	}
+	return name, templates
 }

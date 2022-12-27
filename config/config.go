@@ -7,7 +7,7 @@ type Config struct {
 	Setting *Setting
 }
 
-func (c *Config) GetData() map[interface{}]interface{} {
+func (c *Config) GetData() map[string]interface{} {
 	return c.data.GetMergedData()
 }
 

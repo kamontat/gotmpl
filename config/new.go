@@ -18,12 +18,12 @@ func New(data []string, raw []string, setting *Setting) *Config {
 }
 
 func NewData(base string, files, raw []string) *data {
-	var underlay = make(map[string]map[interface{}]interface{})
+	var underlay = make(map[string]map[string]interface{})
 	for _, file := range files {
 		var ext = filepath.Ext(file)
 		var abspath = utils.ResolvePath(base, file)
 
-		var mapping = make(map[interface{}]interface{})
+		var mapping = make(map[string]interface{})
 
 		var content = utils.MustR(os.ReadFile(abspath))
 		if ext == ".yaml" || ext == ".yml" {
@@ -42,7 +42,7 @@ func NewData(base string, files, raw []string) *data {
 	}
 
 	if len(raw) > 0 {
-		underlay["raw"] = utils.ToMap(raw)
+		underlay["raw"] = parseRawData(raw)
 	}
 
 	return &data{
