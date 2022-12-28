@@ -7,8 +7,9 @@ import (
 
 	"github.com/kamontat/gotmpl/config"
 	"github.com/kamontat/gotmpl/core"
-	"github.com/kamontat/gotmpl/logger"
-	"github.com/kamontat/gotmpl/utils"
+	"github.com/kamontat/gotmpl/fpath"
+	"github.com/kc-workspace/go-lib/logger"
+	"github.com/kc-workspace/go-lib/utils"
 )
 
 var defaultCwd = utils.MustR(os.Getwd())
@@ -91,9 +92,14 @@ func main() {
 
 	flag.Parse()
 
-	logger.Setup(debug)
+	if debug {
+		logger.SetLevel(logger.DEBUG)
+	} else {
+		logger.SetLevel(logger.INFO)
+	}
+
 	var conf = config.New(data, rawData, &config.Setting{
-		WorkingDirectory: cwd,
+		WorkingDirectory: fpath.Resolve(defaultCwd, cwd),
 		DebugMode:        debug,
 	})
 

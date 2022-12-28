@@ -4,8 +4,5 @@ use (
 	./cli
 	./config
 	./core
-	./utils
-	./logger
-	./maps
-	./datatype
+	./fpath
 )

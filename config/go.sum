@@ -1,0 +1,10 @@
+github.com/kc-workspace/go-lib/datatype v0.0.0-20221228065809-443af0bb5db3 h1:mxNrflOX68smN5oKHeK++z9pMKdhgezbCTSnhp/M+8w=
+github.com/kc-workspace/go-lib/datatype v0.0.0-20221228065809-443af0bb5db3/go.mod h1:PMvMT66piq1HHU9lIg/149LDuohWjpU6sNQc1OJI8As=
+github.com/kc-workspace/go-lib/logger v0.0.0-20221228065809-443af0bb5db3 h1:bqVNL9O5kQbiExdmkF9uELQoEueqsi+t0Ge7+2/r+NM=
+github.com/kc-workspace/go-lib/logger v0.0.0-20221228065809-443af0bb5db3/go.mod h1:gHBjMQIgUgYeEvRoJGx7cy11UkHwf2YcIZNBFTOKrCs=
+github.com/kc-workspace/go-lib/mapper v0.0.0-20221228065809-443af0bb5db3 h1:uTf+Tr/3ztNLWkN2GvxXiFlHT7M/eDTSK6H5lkOkQ74=
+github.com/kc-workspace/go-lib/mapper v0.0.0-20221228065809-443af0bb5db3/go.mod h1:nRXqZ0uVcC44IgnqODW/sd2TQgj9+nN4685dFMsWPyg=
+github.com/kc-workspace/go-lib/utils v0.0.0-20221228065809-443af0bb5db3 h1:0IWVowomdzYqhIspyKIPKImeN0SsIUDkkIjU0G/FtPY=
+github.com/kc-workspace/go-lib/utils v0.0.0-20221228065809-443af0bb5db3/go.mod h1:iXY3vP+ogzW12/0+TV8li8twAaBJYSp+c+6YIeqH0o0=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=

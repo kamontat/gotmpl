@@ -1,22 +1,17 @@
 package core
 
 import (
-	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/kamontat/gotmpl/utils"
+	"github.com/kamontat/gotmpl/fpath"
+	"github.com/kc-workspace/go-lib/utils"
 )
 
 type Template struct {
 	Input  string
 	Output string
-}
-
-func (t *Template) String() string {
-	return fmt.Sprintf("%s => %s", t.Input, t.Output)
 }
 
 const (
@@ -35,7 +30,7 @@ func buildTemplateName(name string, input string) string {
 
 func buildTemplateInput(raw, base string) (result []string) {
 	result = make([]string, 0)
-	var abs = utils.ResolvePath(base, raw)
+	var abs = fpath.Resolve(base, raw)
 	var stat = utils.MustR(os.Stat(abs))
 
 	if stat.IsDir() {
@@ -51,33 +46,36 @@ func buildTemplateInput(raw, base string) (result []string) {
 	} else {
 		// Input single file
 		if filepath.Ext(abs) != TEMPLATE_EXTENSION {
-			log.Panic("template file extension must be '.gotmpl'")
+			panic("template file extension must be '.gotmpl'")
 		}
 		return append(result, abs)
 	}
+}
+
+func buildOutputPath(dir, filename string) string {
+	return filepath.Join(dir, strings.Replace(filename, TEMPLATE_EXTENSION, "", 1))
 }
 
 func buildTemplateOutput(inputs []string, output string, base string) (result []string) {
 	result = make([]string, len(inputs))
 
 	var isSingleMode = len(inputs) == 1
-	var abs = utils.ResolvePath(base, output)
+	var abs = fpath.Resolve(base, output)
 	var isDir = filepath.Ext(abs) == ""
 
 	if !isDir {
 		if !isSingleMode {
-			log.Panic("template is directory, so output must be directory as well")
+			panic("template is directory, so output must be directory as well")
 		}
 
 		// both template and output are file
-		result[0] = abs
+		result[0] = buildOutputPath(filepath.Dir(abs), filepath.Base(abs))
+
 		return
 	}
 
 	for i, input := range inputs {
-		var base = strings.Replace(filepath.Base(input), TEMPLATE_EXTENSION, "", 1)
-		var output = filepath.Join(abs, base)
-		result[i] = output
+		result[i] = buildOutputPath(abs, filepath.Base(input))
 	}
 
 	return

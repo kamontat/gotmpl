@@ -2,26 +2,35 @@ package config
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 	"path/filepath"
 
-	"github.com/kamontat/gotmpl/utils"
+	"github.com/kamontat/gotmpl/fpath"
+	"github.com/kc-workspace/go-lib/logger"
+	"github.com/kc-workspace/go-lib/utils"
 	"gopkg.in/yaml.v3"
 )
 
-func New(data []string, raw []string, setting *Setting) *Config {
-	return &Config{
-		data:    NewData(setting.WorkingDirectory, data, raw),
+func New(data []string, raw []string, setting *Setting) (config *Config) {
+	var log = logger.Get("config", "new")
+
+	config = &Config{
+		Data:    NewData(setting.WorkingDirectory, data, raw),
 		Setting: setting,
 	}
+
+	log.Debug(`data: %s`, config.Data.String())
+	log.Debug(`setting: wd=%s, debug=%t`, config.Setting.WorkingDirectory, config.Setting.DebugMode)
+
+	return
 }
 
 func NewData(base string, files, raw []string) *data {
+	var log = logger.Get("config", "data")
 	var underlay = make(map[string]map[string]interface{})
 	for _, file := range files {
 		var ext = filepath.Ext(file)
-		var abspath = utils.ResolvePath(base, file)
+		var abspath = fpath.Resolve(base, file)
 
 		var mapping = make(map[string]interface{})
 
@@ -35,7 +44,7 @@ func NewData(base string, files, raw []string) *data {
 				mapping[k] = v
 			}
 		} else {
-			log.Panicf("invalid file extension %s\n", abspath)
+			log.ErrorString(`cannot parse %s file, skipping`, abspath)
 		}
 
 		underlay[abspath] = mapping

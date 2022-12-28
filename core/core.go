@@ -1,13 +1,12 @@
 package core
 
 import (
-	"log"
 	"os"
 	"text/template"
 
 	"github.com/Masterminds/sprig/v3"
 	"github.com/kamontat/gotmpl/config"
-	"github.com/kamontat/gotmpl/utils"
+	"github.com/kc-workspace/go-lib/logger"
 )
 
 type Core struct {
@@ -16,33 +15,42 @@ type Core struct {
 }
 
 func (c *Core) Parse() error {
-	log.Printf(`
-%s`, c.Config)
+	var log = logger.Get("core", "parser")
 
+	// Reuse data for all templates
+	var data = c.Config.GetData()
 	for name, templates := range c.Templates {
-		log.Printf("%s:\n", name)
+		log.Debug("parsing %s...", name)
 		for _, _tmpl := range templates {
-			log.Printf("  %v\n", _tmpl)
+			log.Debug("  input: '%s'", _tmpl.Input)
+			log.Debug("  output: '%s'", _tmpl.Output)
 
 			// Read template file
-			var inputContent = utils.NewOptional(os.ReadFile(_tmpl.Input))
-			// Parse template file to Template object
-			var tmpl = utils.MapOptional(inputContent, func(ctn []byte) (*template.Template, error) {
-				return template.New(name).Parse(string(ctn))
-			})
-			// Create output file and execute template
-			var result = utils.FlatMapOptional(tmpl, func(tmpl *template.Template) *utils.Optional[string] {
-				var outputContent = utils.NewOptional(os.OpenFile(_tmpl.Output, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666))
-				return utils.MapOptional(outputContent, func(out *os.File) (string, error) {
-					return "", tmpl.Funcs(sprig.FuncMap()).Execute(out, c.Config.GetData())
-				})
-			})
+			inputContent, err := os.ReadFile(_tmpl.Input)
+			if err != nil {
+				log.Error(err)
+				break
+			}
 
-			if !result.IsExist() {
-				log.Println("Errors: ")
-				for i, err := range result.Errors() {
-					log.Printf("  %d) %v", i, err)
-				}
+			// Parse template file to Template object
+			tmpl, err := template.New(name).Parse(string(inputContent))
+			if err != nil {
+				log.Error(err)
+				break
+			}
+
+			// Create output file
+			outputContent, err := os.OpenFile(_tmpl.Output, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+			if err != nil {
+				log.Error(err)
+				break
+			}
+
+			// execute template
+			err = tmpl.Funcs(sprig.FuncMap()).Execute(outputContent, data)
+			if err != nil {
+				log.Error(err)
+				break
 			}
 		}
 

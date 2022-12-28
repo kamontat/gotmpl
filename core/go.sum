@@ -12,6 +12,10 @@ github.com/huandu/xstrings v1.3.3 h1:/Gcsuc1x8JVbJ9/rlye4xZnVAbEkGauT8lbebqcQws4
 github.com/huandu/xstrings v1.3.3/go.mod h1:y5/lhBue+AyNmUVz9RLU9xbLR0o4KIIExikq4ovT0aE=
 github.com/imdario/mergo v0.3.11 h1:3tnifQM4i+fbajXKBHXWEH+KvNHqojZ778UH75j3bGA=
 github.com/imdario/mergo v0.3.11/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=
+github.com/kc-workspace/go-lib/logger v0.0.0-20221228065809-443af0bb5db3 h1:bqVNL9O5kQbiExdmkF9uELQoEueqsi+t0Ge7+2/r+NM=
+github.com/kc-workspace/go-lib/logger v0.0.0-20221228065809-443af0bb5db3/go.mod h1:gHBjMQIgUgYeEvRoJGx7cy11UkHwf2YcIZNBFTOKrCs=
+github.com/kc-workspace/go-lib/utils v0.0.0-20221228065809-443af0bb5db3 h1:0IWVowomdzYqhIspyKIPKImeN0SsIUDkkIjU0G/FtPY=
+github.com/kc-workspace/go-lib/utils v0.0.0-20221228065809-443af0bb5db3/go.mod h1:iXY3vP+ogzW12/0+TV8li8twAaBJYSp+c+6YIeqH0o0=
 github.com/mitchellh/copystructure v1.0.0 h1:Laisrj+bAB6b/yJwB5Bt3ITZhGJdqmxquMKeZ+mmkFQ=
 github.com/mitchellh/copystructure v1.0.0/go.mod h1:SNtv71yrdKgLRyLFxmLdkAbkKEFWgYaq1OVrnRcwhnw=
 github.com/mitchellh/reflectwalk v1.0.0 h1:9D+8oIskB4VJBN5SFlmc27fSlIBZaov1Wpk/IfikLNY=

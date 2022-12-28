@@ -1,23 +1,24 @@
 package config
 
 import (
-	"log"
 	"strings"
 
-	"github.com/kamontat/gotmpl/maps"
+	"github.com/kc-workspace/go-lib/logger"
+	"github.com/kc-workspace/go-lib/mapper"
 )
 
-func parseRawData(raw []string) (result map[string]interface{}) {
+func parseRawData(input []string) (result map[string]interface{}) {
+	var log = logger.Get("config", "raw-data")
 	result = make(map[string]interface{})
-	for _, raw := range raw {
+	for _, raw := range input {
 		var array = strings.Split(raw, "=")
 		if len(array) != 2 {
-			log.Panic("cannot convert raw data to map")
+			log.ErrorString("cannot convert %s to valid config, skipping", raw)
 		}
 
 		var key = array[0]
 		var value = array[1]
-		maps.Set(result, key, value)
+		mapper.Set(result, key, value)
 	}
 
 	return

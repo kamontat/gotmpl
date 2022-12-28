@@ -1,0 +1,4 @@
+github.com/kc-workspace/go-lib/logger v0.0.0-20221228065809-443af0bb5db3 h1:bqVNL9O5kQbiExdmkF9uELQoEueqsi+t0Ge7+2/r+NM=
+github.com/kc-workspace/go-lib/logger v0.0.0-20221228065809-443af0bb5db3/go.mod h1:gHBjMQIgUgYeEvRoJGx7cy11UkHwf2YcIZNBFTOKrCs=
+github.com/kc-workspace/go-lib/utils v0.0.0-20221228065809-443af0bb5db3 h1:0IWVowomdzYqhIspyKIPKImeN0SsIUDkkIjU0G/FtPY=
+github.com/kc-workspace/go-lib/utils v0.0.0-20221228065809-443af0bb5db3/go.mod h1:iXY3vP+ogzW12/0+TV8li8twAaBJYSp+c+6YIeqH0o0=
