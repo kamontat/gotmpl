@@ -3,6 +3,6 @@ FROM scratch
 WORKDIR /app
 
 # copy compiled script
-COPY gotmpl /app
+COPY kc-tpr /app
 
-ENTRYPOINT [ "/app/gotmpl"]
+ENTRYPOINT [ "/app/kc-tpr"]

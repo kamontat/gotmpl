@@ -1,15 +1,14 @@
-# Template engine
+package main
 
-Parse template using input data file (or options)
+import "fmt"
 
-```
-# Kamontat's Template parser
-
+func usage() {
+	fmt.Printf(`# Kamontat's Template parser
 $ kc-tpr <options>...
 
 Options:
 	-cwd string
-		base directory relative path resolve to (default "$PWD").
+		base directory relative path resolve to (default "%s").
 	-template-path string
 		a require template path (either absolute or relative is accepted)
 		if directory is passed, parse all template on that folder and
@@ -24,10 +23,6 @@ Options:
 		if not provided, output to stdout.
 	-debug
 		enabled debug information.
-```
 
-## Development
-
-```bash
-go run github.com/kamontat/tmpl/cli
-```
+`, cwd)
+}

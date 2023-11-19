@@ -1,8 +1,5 @@
-module github.com/kamontat/gotmpl/cli
+module github.com/kamontat/tmpl/cli
 
-go 1.19
+go 1.21.4
 
-require (
-	github.com/kc-workspace/go-lib/logger v0.0.0-20221228065809-443af0bb5db3 // indirect
-	github.com/kc-workspace/go-lib/utils v0.0.0-20221228065809-443af0bb5db3 // indirect
-)
+require github.com/kc-workspace/go-lib/utils v0.0.0-20230212075435-a1146292a608
