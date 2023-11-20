@@ -31,3 +31,7 @@ Options:
 ```bash
 go run github.com/kamontat/tmpl/cli
 ```
+
+## asdf plugin
+
+A easy way to install using asdf: https://github.com/kc-workspace/asdf-kc-tpr
