@@ -13,12 +13,20 @@ import (
 	"github.com/kc-workspace/go-lib/utils"
 )
 
+// https://goreleaser.com/cookbooks/using-main.version/
+var (
+	name    = "tpr"
+	version = "dev"
+	date    = "unknown"
+)
+
 var cwd string
 var debug bool
 var dataPaths ArrayFlag
 var dataStrings ArrayFlag
 var templatePath string
 var outputPath string
+var fastExit int8 = -1
 
 func main() {
 	var tmpl, err = templates.NewFile(paths.Resolve(cwd, templatePath))
@@ -46,6 +54,12 @@ func main() {
 }
 
 func init() {
+	flag.BoolFunc("version", "", func(s string) error {
+		fmt.Printf("%s: %s (%s)\n", name, version, date)
+		fastExit = 0
+		return nil
+	})
+
 	flag.StringVar(&cwd, "cwd", utils.MustR(os.Getwd()), "")
 	flag.BoolVar(&debug, "debug", false, "")
 
@@ -61,5 +75,9 @@ func init() {
 
 	if debug {
 		logger.DefaultManager.SetLevel(logger.DEBUG)
+	}
+
+	if fastExit >= 0 {
+		os.Exit(int(fastExit))
 	}
 }

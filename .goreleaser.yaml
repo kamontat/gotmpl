@@ -23,6 +23,8 @@ builds:
     main: ./cli
     env:
       - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X main.name={{.ProjectName}} -X main.version={{.Version}} -X main.date={{.Date}}
     targets:
       - go_first_class # Go first-class ports
       - linux_amd64_v1 # Normal linux machine

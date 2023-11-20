@@ -23,6 +23,8 @@ Options:
 		if not provided, output to stdout.
 	-debug
 		enabled debug information.
+	-version
+		show current command version and exit.
 
 `, cwd)
 }
